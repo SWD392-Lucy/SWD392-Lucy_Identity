@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: lucy-identity-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-lucy_identity}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    ports:
+      - "5432:5432"
+    volumes:
+      - lucy_identity_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-lucy_identity}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  identity-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lucy-identity-api:latest
+    container_name: lucy-identity-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ASPNETCORE_URLS: http://+:8080
+      LUCY_ENABLE_HTTPS_REDIRECTION: ${LUCY_ENABLE_HTTPS_REDIRECTION:-false}
+      ConnectionStrings__IdentityDb: ${IDENTITY_DB_CONNECTION:?IDENTITY_DB_CONNECTION is required}
+      Jwt__Issuer: ${JWT_ISSUER:-lucy.identity}
+      Jwt__Audience: ${JWT_AUDIENCE:-lucy.clients}
+      Jwt__SigningKey: ${JWT_SIGNING_KEY:?JWT_SIGNING_KEY is required}
+      Jwt__AccessTokenMinutes: ${ACCESS_TOKEN_MINUTES:-60}
+      Jwt__RefreshTokenDays: ${REFRESH_TOKEN_DAYS:-30}
+      IdentitySeed__Super__Email: ${IDENTITY_SEED_SUPER_EMAIL:-super@lucy.local}
+      IdentitySeed__Super__Password: ${IDENTITY_SEED_SUPER_PASSWORD:-}
+      IdentitySeed__Super__DisplayName: ${IDENTITY_SEED_SUPER_DISPLAY_NAME:-Lucy Super Admin}
+      IdentitySeed__Super__AvatarPersona: ${IDENTITY_SEED_SUPER_AVATAR_PERSONA:-super-gold}
+      IdentitySeed__Super__AnonymousDisplayName: ${IDENTITY_SEED_SUPER_ANONYMOUS_DISPLAY_NAME:-Lucy Super}
+    ports:
+      - "${IDENTITY_HTTP_PORT:-5095}:8080"
+    restart: unless-stopped
+
+volumes:
+  lucy_identity_postgres:
