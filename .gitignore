@@ -5,4 +5,5 @@
 .vs/
 *.csproj.user
 *.log
+.env
 docker-compose.yml

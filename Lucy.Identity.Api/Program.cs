@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 
+LoadDotEnv();
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -99,3 +101,40 @@ app.MapGet("/api/health", () => Results.Ok(new
 app.MapControllers();
 
 app.Run();
+
+static void LoadDotEnv()
+{
+    var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
+    while (directory is not null)
+    {
+        var envPath = Path.Combine(directory.FullName, ".env");
+        if (File.Exists(envPath))
+        {
+            foreach (var rawLine in File.ReadAllLines(envPath))
+            {
+                var line = rawLine.Trim();
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith('#'))
+                {
+                    continue;
+                }
+
+                var separatorIndex = line.IndexOf('=');
+                if (separatorIndex <= 0)
+                {
+                    continue;
+                }
+
+                var key = line[..separatorIndex].Trim();
+                var value = line[(separatorIndex + 1)..].Trim().Trim('"', '\'');
+                if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(key)))
+                {
+                    Environment.SetEnvironmentVariable(key, value);
+                }
+            }
+
+            return;
+        }
+
+        directory = directory.Parent;
+    }
+}

@@ -6,7 +6,7 @@ public sealed class JwtOptions
 
     public string Issuer { get; set; } = "lucy.identity";
     public string Audience { get; set; } = "lucy.clients";
-    public string SigningKey { get; set; } = "CHANGE_ME_TO_A_32_BYTE_SECRET_FOR_LOCAL_DEV";
+    public string SigningKey { get; set; } = string.Empty;
     public int AccessTokenMinutes { get; set; } = 60;
     public int RefreshTokenDays { get; set; } = 30;
 }
