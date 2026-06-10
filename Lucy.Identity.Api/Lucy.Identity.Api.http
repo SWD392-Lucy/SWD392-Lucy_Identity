@@ -1,0 +1,118 @@
+@Lucy.Identity.Api_HostAddress = http://localhost:5095
+
+POST {{Lucy.Identity.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "mentor@lucy.local",
+  "password": "Password123",
+  "displayName": "Lucy Mentor",
+  "role": "Pro",
+  "avatarPersona": "calm-blue",
+  "anonymousDisplayName": "Mentor Blue",
+  "publicBio": "English speaking mentor",
+  "languageLevel": "Advanced"
+}
+
+###
+
+POST {{Lucy.Identity.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "mentor@lucy.local",
+  "password": "Password123"
+}
+
+###
+
+GET {{Lucy.Identity.Api_HostAddress}}/api/auth/me
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+###
+
+PUT {{Lucy.Identity.Api_HostAddress}}/api/auth/me/profile
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "displayName": "Lucy Mentor",
+  "avatarPersona": "focused-green",
+  "anonymousDisplayName": "Mentor Green",
+  "publicBio": "Conversation practice mentor",
+  "languageLevel": "Advanced"
+}
+
+###
+
+POST {{Lucy.Identity.Api_HostAddress}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+###
+
+POST {{Lucy.Identity.Api_HostAddress}}/api/auth/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+###
+
+GET {{Lucy.Identity.Api_HostAddress}}/api/users
+Accept: application/json
+Authorization: Bearer {{superAccessToken}}
+
+###
+
+GET {{Lucy.Identity.Api_HostAddress}}/api/users/{{userId}}
+Accept: application/json
+Authorization: Bearer {{superAccessToken}}
+
+###
+
+PUT {{Lucy.Identity.Api_HostAddress}}/api/users/{{userId}}/role
+Content-Type: application/json
+Authorization: Bearer {{superAccessToken}}
+
+{
+  "role": "Pro"
+}
+
+###
+
+PATCH {{Lucy.Identity.Api_HostAddress}}/api/users/{{userId}}/status
+Content-Type: application/json
+Authorization: Bearer {{superAccessToken}}
+
+{
+  "status": "Active"
+}
+
+###
+
+GET {{Lucy.Identity.Api_HostAddress}}/api/internal/users/{{userId}}/public-profile
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+###
+
+GET {{Lucy.Identity.Api_HostAddress}}/api/internal/users/{{userId}}/room-identity
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+###
+
+POST {{Lucy.Identity.Api_HostAddress}}/api/internal/tokens/validate
+Content-Type: application/json
+
+{
+  "accessToken": "{{accessToken}}"
+}
+
+###

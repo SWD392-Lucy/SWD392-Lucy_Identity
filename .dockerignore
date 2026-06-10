@@ -1,0 +1,12 @@
+.git
+.github
+.vs
+**/bin
+**/obj
+**/TestResults
+Dockerfile
+docker-compose*.yml
+*.user
+*.suo
+README.md
+lucy_project_description.md

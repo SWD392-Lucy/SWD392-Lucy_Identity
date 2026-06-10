@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+**/App_Data/users.json
+**/App_Data/DataProtectionKeys/
+.vs/
+*.csproj.user
+*.log
+docker-compose.yml
