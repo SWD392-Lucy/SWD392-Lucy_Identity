@@ -12,6 +12,8 @@ public sealed class JwtTokenService : IAccessTokenService
 {
     private readonly JwtOptions options;
 
+    public int RefreshTokenDays => options.RefreshTokenDays;
+
     public JwtTokenService(IOptions<JwtOptions> options)
     {
         this.options = options.Value;

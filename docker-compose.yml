@@ -33,7 +33,7 @@ services:
       Jwt__Issuer: ${JWT_ISSUER:-lucy.identity}
       Jwt__Audience: ${JWT_AUDIENCE:-lucy.clients}
       Jwt__SigningKey: ${JWT_SIGNING_KEY:?JWT_SIGNING_KEY is required}
-      Jwt__AccessTokenMinutes: ${ACCESS_TOKEN_MINUTES:-60}
+      Jwt__AccessTokenMinutes: ${ACCESS_TOKEN_MINUTES:-15}
       Jwt__RefreshTokenDays: ${REFRESH_TOKEN_DAYS:-30}
       IdentitySeed__Super__Email: ${IDENTITY_SEED_SUPER_EMAIL:-super@lucy.local}
       IdentitySeed__Super__Password: ${IDENTITY_SEED_SUPER_PASSWORD:-}

@@ -4,5 +4,6 @@ namespace Lucy.Identity.Domain.Identity;
 
 public interface IAccessTokenService
 {
+    int RefreshTokenDays { get; }
     (string Token, DateTimeOffset ExpiresAt) CreateToken(UserAccount user);
 }

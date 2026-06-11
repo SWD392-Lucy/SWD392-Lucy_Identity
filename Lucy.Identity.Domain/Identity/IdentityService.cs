@@ -208,7 +208,7 @@ public sealed partial class IdentityService
 
     private async Task<AuthResponse> CreateAuthResponseAsync(UserAccount user, CancellationToken cancellationToken)
     {
-        var (refreshToken, refreshTokenHash, refreshTokenExpiresAt) = CreateRefreshToken();
+        var (refreshToken, refreshTokenHash, refreshTokenExpiresAt) = CreateRefreshToken(tokenService.RefreshTokenDays);
         await refreshTokens.AddAsync(new RefreshToken
         {
             UserId = user.Id,
@@ -314,11 +314,11 @@ public sealed partial class IdentityService
         };
     }
 
-    private static (string Token, string TokenHash, DateTimeOffset ExpiresAt) CreateRefreshToken()
+    private static (string Token, string TokenHash, DateTimeOffset ExpiresAt) CreateRefreshToken(int refreshTokenDays)
     {
         var bytes = RandomNumberGenerator.GetBytes(64);
         var token = Convert.ToBase64String(bytes);
-        return (token, HashRefreshToken(token), DateTimeOffset.UtcNow.AddDays(30));
+        return (token, HashRefreshToken(token), DateTimeOffset.UtcNow.AddDays(Math.Max(1, refreshTokenDays)));
     }
 
     private static string HashRefreshToken(string refreshToken)

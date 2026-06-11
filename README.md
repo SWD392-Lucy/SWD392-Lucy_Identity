@@ -13,6 +13,7 @@ User & Payment service foundation for LUCY. Current scope covers week 1-2 Identi
 - Refresh token login sessions.
 - Internal profile/token endpoints for Node.js and Java services.
 - `Super` user management endpoints.
+- Configurable JWT lifetimes for short-lived access tokens and database-backed refresh tokens.
 
 ## Architecture
 
@@ -83,11 +84,13 @@ ConnectionStrings__IdentityDb=Host=<postgres-host>;Port=5432;Database=<db>;Usern
 Jwt__Issuer=lucy.identity
 Jwt__Audience=lucy.clients
 Jwt__SigningKey=<strong-shared-secret>
+Jwt__AccessTokenMinutes=15
+Jwt__RefreshTokenDays=30
 LUCY_ENABLE_HTTPS_REDIRECTION=false
 ASPNETCORE_URLS=http://+:8080
 ```
 
-`Jwt__SigningKey` must match the Gateway and Realtime services. The container listens on port `8080`; `docker-compose.yml` maps it to host port `5095`.
+`Jwt__SigningKey` must match the Gateway, Realtime, and LMS services. The container listens on port `8080`; `docker-compose.yml` maps it to host port `5095`.
 
 HTTPS redirection is disabled by default in the container because LUCY routes traffic through the Gateway/reverse proxy. Terminate TLS at the proxy/load balancer, or set `LUCY_ENABLE_HTTPS_REDIRECTION=true` only when the container is configured with HTTPS correctly.
 
